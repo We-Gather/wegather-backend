@@ -1,0 +1,33 @@
+name: Wegather-backend workflow
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  setup-node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+          cache-dependency-path: '**/yarn.lock'
+
+  build:
+    needs: setup-node
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: yarn build
+
+  test:
+    needs: setup-node
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run test
+        run: yarn test
