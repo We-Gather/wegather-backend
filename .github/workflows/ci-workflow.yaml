@@ -24,7 +24,11 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
       - name: Run test
-        run: yarn test
+        run: npx jest --coverage | tee ./coverage.txt && exit ${PIPESTATUS[0]}
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@v1.0.23
+        with:
+          coverage-path: ./coverage.txt
 
   build:
     needs: setup-node
