@@ -27,6 +27,8 @@ jobs:
         run: yarn test --coverage --coverageReporters json-summary
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@v1.0.23
+        with:
+          github-token: ${{secrets.SECRET}}
 
   build:
     needs: setup-node
