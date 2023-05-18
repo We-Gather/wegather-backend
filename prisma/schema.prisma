@@ -12,20 +12,22 @@ datasource db {
 
 model User {
   id            Int      @id @default(autoincrement())
-  school_id     Int
+  school_id     Int?
   email         String   @unique
   name          String
   password      String
-  refresh_token String
+  refresh_token String?
   avatar        String?
   class_num     String?
   createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  updatedAt     DateTime @default(now()) @updatedAt
   is_delete     Boolean  @default(false)
   deletedAt     DateTime? 
 
-  school        School   @relation(fields: [school_id], references: [id])
+  school        School?   @relation(fields: [school_id], references: [id])
   oauth_user    OAuth_user[]
+
+  @@map("user") 
 }
 
 model OAuth_user {
