@@ -63,3 +63,9 @@ model School_major {
 
   school School @relation(fields: [school_id], references: [id])
 }
+
+model OutBoxMessage {
+  id        Int       @default(autoincrement()) @id
+  data      String    @db.MediumText()
+  createdAt DateTime  @default(now())
+}
