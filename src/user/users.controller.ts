@@ -3,19 +3,15 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
-  Param,
-  ParseIntPipe,
   Put,
-  Query,
   Request,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 
 import { JwtAuthGuard } from '@app/core/auth/JwtAuthGuard';
-import { AuthGuard } from '@nestjs/passport';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @ApiTags('user')

@@ -1,20 +1,17 @@
-import {
-  Body,
-  Controller,
-  HttpException,
-  HttpStatus,
-  Post,
-} from '@nestjs/common';
-import { AuthService, RegistrationStatus } from '@app/auth/auth.service';
-
+import { AuthService, RegistrationStatus } from '@app/user/auth.service';
 import { CreateUserDto } from '@app/user/dto/create-user.dto';
 import { LoginUserDto } from '@app/user/dto/login-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Inject,
+  Post,
+} from '@nestjs/common';
 
-@ApiTags('auth')
-@Controller('auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+@Controller()
+export class LoginController {
+  constructor(@Inject(AuthService) private readonly authService: AuthService) {}
 
   @Post('register')
   public async register(
@@ -24,7 +21,7 @@ export class AuthController {
       createUserDto,
     );
     if (!result.success) {
-      throw new HttpException(result.message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(result.message);
     }
     return result;
   }
