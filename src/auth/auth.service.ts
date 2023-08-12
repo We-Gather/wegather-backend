@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '../user/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from '../users/dto/create-user.dto';
-import { LoginUserDto } from '../users/dto/login-user.dto';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { LoginUserDto } from '../user/dto/login-user.dto';
 
-import { JwtPayload } from './jwt.strategy';
+import { JwtPayload } from '@app/core/auth/JwtStrategy';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from '@prisma/client';
 import { hash } from 'bcrypt';

@@ -14,7 +14,7 @@ import {
 import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 
-import { JwtAuthGuard } from '@app/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '@app/core/auth/JwtAuthGuard';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
