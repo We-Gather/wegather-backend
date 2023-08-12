@@ -10,6 +10,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id            Int      @id @default(autoincrement())
+  school_id     Int?
+  email         String   @unique
+  name          String
+  password      String
+  refresh_token String?
+  avatar        String?
+  class_num     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now()) @updatedAt
+  is_delete     Boolean  @default(false)
+  deletedAt     DateTime? 
+
+  school        School?   @relation(fields: [school_id], references: [id])
+  oauth_user    OAuth_user[]
+
+  @@map("user") 
+}
+
+model OAuth_user {
+  id            Int      @id @default(autoincrement())
+  user_id       Int
+  provider_type String
+  provider_id   String
+  email         String
+  refresh_token String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  is_delete     Boolean  @default(false)
+  deletedAt     DateTime? 
+
+  user          User @relation(fields: [user_id], references: [id])
+}
+
+
+model School {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email_type String?
+  campus     String?
+
+  majors     School_major[] 
+  users      User[]
+}
+
+model School_major {
+  id         Int      @id @default(autoincrement())
+  school_id  Int
+  major_name String
+
+  school School @relation(fields: [school_id], references: [id])
+}
+
 model OutBoxMessage {
   id        Int       @default(autoincrement()) @id
   data      String    @db.MediumText()
