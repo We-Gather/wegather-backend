@@ -4,18 +4,12 @@ import {
   HttpException,
   HttpStatus,
   Post,
-  UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import {
-  AuthService,
-  RegistrationSeederStatus,
-  RegistrationStatus,
-} from './auth.service';
+import { AuthService, RegistrationStatus } from '@app/auth/auth.service';
 
 import { CreateUserDto } from '@app/users/dto/create-user.dto';
 import { LoginUserDto } from '@app/users/dto/login-user.dto';
-import { ApiBearerAuth, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
 @Controller('auth')
