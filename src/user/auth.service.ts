@@ -1,20 +1,20 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from '../users/dto/create-user.dto';
-import { LoginUserDto } from '../users/dto/login-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 
-import { JwtPayload } from './jwt.strategy';
-import { PrismaService } from '../prisma/prisma.service';
+import { JwtPayload } from '@app/core/auth/JwtStrategy';
 import { User } from '@prisma/client';
 import { hash } from 'bcrypt';
+import { DatabaseService } from '@app/core/database/DatabaseService';
 // import {User} from "../users/user.entity";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly prisma: PrismaService,
-    private readonly jwtService: JwtService,
+    private readonly prisma: DatabaseService,
+    @Inject(JwtService) private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
   ) {}
 
@@ -29,7 +29,7 @@ export class AuthService {
     } catch (err) {
       status = {
         success: false,
-        message: err,
+        message: err.message,
       };
     }
     return status;
@@ -50,11 +50,8 @@ export class AuthService {
 
   private _createToken({ email }): any {
     const user: JwtPayload = { email };
-    const Authorization = this.jwtService.sign(user);
-    return {
-      expiresIn: process.env.EXPIRESIN,
-      Authorization,
-    };
+    const result = this.jwtService.sign(user);
+    return { token: result };
   }
 
   async validateUser(payload: JwtPayload): Promise<any> {

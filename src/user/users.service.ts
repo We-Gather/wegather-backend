@@ -4,8 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { compare, hash } from 'bcrypt';
-import { PrismaService } from '../prisma/prisma.service';
 import { User } from '@prisma/client';
+import { DatabaseService } from '@app/core/database/DatabaseService';
 
 // interface FormatLogin extends Partial<User> {
 //   login: string;
@@ -13,7 +13,7 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: DatabaseService) {}
 
   //use by user module to change user password
   async updatePassword(payload: UpdatePasswordDto, id: number): Promise<User> {
