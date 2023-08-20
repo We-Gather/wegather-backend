@@ -69,3 +69,15 @@ model OutBoxMessage {
   data      String    @db.MediumText()
   createdAt DateTime  @default(now())
 }
+
+model Club {
+  id            Int       @id @default(autoincrement())
+  name          String
+  type          String
+  school_id     Int
+  introduction  String?
+  explanation   String?
+  // category      String
+  // tag           String
+  poster        String?
+}
