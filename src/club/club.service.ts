@@ -8,9 +8,7 @@ export class ClubService {
 
   async create(clubDto: CreateClubDto): Promise<any> {
     return await this.prisma.club.create({
-      data: {
-        ...clubDto,
-      },
+      data: { ...clubDto },
     });
   }
 }
