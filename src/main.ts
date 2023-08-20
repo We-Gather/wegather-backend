@@ -20,7 +20,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   await app.get(LifeCycleService).startService();
-
   await app.listen(3000);
 }
 bootstrap();
