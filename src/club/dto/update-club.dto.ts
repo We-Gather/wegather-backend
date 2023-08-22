@@ -1,4 +1,4 @@
-// src/club/dto/create-user.dto.ts
+// src/club/dto/update-user.dto.ts
 
 import { ApiProperty } from '@nestjs/swagger';
 import { ClubType } from '@prisma/client';
@@ -12,7 +12,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class CreateClubDto {
+export class UpdateClubDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(1)

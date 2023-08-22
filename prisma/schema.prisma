@@ -73,7 +73,7 @@ model OutBoxMessage {
 model Club {
   id            Int         @id @default(autoincrement())
   name          String
-  type          String
+  type          ClubType    @default(SCHOOL)
   school_id     Int
   introduction  String?
   description   String?
@@ -81,4 +81,11 @@ model Club {
   // tag           String
   poster        String?
   createdAt     DateTime    @default(now())
+}
+
+enum ClubType {
+  UNION
+  CENTRAL
+  SCHOOL
+  ACADEMY
 }

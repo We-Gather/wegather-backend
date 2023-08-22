@@ -3,6 +3,7 @@ import { CreateClubDto } from './dto/create-club.dto';
 import { DatabaseService } from '@app/core/database/DatabaseService';
 import { ClubEntity } from './entities/club.entity';
 import { validateOrReject } from 'class-validator';
+import { UpdateClubDto } from './dto/update-club.dto';
 
 @Injectable()
 export class ClubService {
@@ -31,6 +32,23 @@ export class ClubService {
       })
       .catch((err) => {
         return [];
+      });
+  }
+
+  async update(clubId: number, updateClubDto: UpdateClubDto): Promise<number> {
+    return await this.prisma.club
+      .update({
+        where: { id: clubId },
+        data: {
+          ...updateClubDto,
+        },
+      })
+      .then((res) => {
+        return res.id;
+      })
+      .catch((err) => {
+        // 존재하지 않는 Record를 Update 시도한 경우
+        return -1;
       });
   }
 }

@@ -1,7 +1,16 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ClubService } from './club.service';
 import { CreateClubDto } from './dto/create-club.dto';
+import { UpdateClubDto } from './dto/update-club.dto';
 
 @ApiTags('club')
 @Controller('club')
@@ -16,5 +25,13 @@ export class ClubController {
   @Get('all')
   public async findAllClub() {
     return this.clubService.findAll();
+  }
+
+  @Put(':id')
+  public async updateClub(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateClubDto: UpdateClubDto,
+  ) {
+    return this.clubService.update(id, updateClubDto);
   }
 }
