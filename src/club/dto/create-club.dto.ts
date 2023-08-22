@@ -1,7 +1,13 @@
 // src/users/dto/create-user.dto.ts
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, MinLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class CreateClubDto {
   @IsString()
@@ -15,6 +21,7 @@ export class CreateClubDto {
   @ApiProperty()
   type: string;
 
+  @IsOptional()
   @ApiProperty()
   logo?: string;
 
@@ -23,9 +30,11 @@ export class CreateClubDto {
   @ApiProperty()
   school_id: number;
 
+  @IsOptional()
   @ApiProperty()
-  introduction: string;
+  introduction?: string;
 
+  @IsOptional()
   @ApiProperty()
   description?: string;
 
@@ -37,6 +46,7 @@ export class CreateClubDto {
   //   @ApiProperty()
   //   tag: string;
 
+  @IsOptional()
   @ApiProperty()
   poster?: string;
 }
