@@ -71,13 +71,14 @@ model OutBoxMessage {
 }
 
 model Club {
-  id            Int       @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   name          String
   type          String
   school_id     Int
   introduction  String?
-  explanation   String?
+  description   String?
   // category      String
   // tag           String
   poster        String?
+  createdAt     DateTime    @default(now())
 }
