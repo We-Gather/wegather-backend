@@ -16,7 +16,7 @@ export class CreateClubDto {
   type: string;
 
   @ApiProperty()
-  logo: string;
+  logo?: string;
 
   @IsNumber()
   @IsNotEmpty()
@@ -27,7 +27,7 @@ export class CreateClubDto {
   introduction: string;
 
   @ApiProperty()
-  explanation: string;
+  description?: string;
 
   //   @IsString()
   //   @ApiProperty()
@@ -38,5 +38,5 @@ export class CreateClubDto {
   //   tag: string;
 
   @ApiProperty()
-  poster: string;
+  poster?: string;
 }

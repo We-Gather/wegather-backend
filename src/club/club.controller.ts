@@ -17,10 +17,7 @@ export class ClubController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  public async createClub(
-    @Request() req,
-    @Body() createClubDto: CreateClubDto,
-  ) {
+  public async createClub(@Body() createClubDto: CreateClubDto) {
     return this.clubService.create(createClubDto);
   }
 }
