@@ -12,13 +12,36 @@ import { DatabaseService } from '@app/core/database/DatabaseService';
 // }
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(private prisma: DatabaseService) {}
 
+  //use by auth module to register user in database
+  async create(userDto: CreateUserDto): Promise<any> {
+    // // check if the user exists in the db
+    const userInDb = await this.prisma.user.findFirst({
+      where: { email: userDto.email },
+    });
+    if (userInDb) {
+      throw new HttpException('user_already_exist', HttpStatus.CONFLICT);
+    }
+    return await this.prisma.user
+      .create({
+        data: {
+          ...userDto,
+          password: await hash(userDto.password, 10),
+        },
+      })
+      .then((res) => {
+        return res.id;
+      })
+      .catch((err) => {
+        return -1;
+      });
+  }
   //use by user module to change user password
   async updatePassword(payload: UpdatePasswordDto, id: number): Promise<User> {
     const user = await this.prisma.user.findUnique({
-      where: { id },
+      where: { id: id },
     });
     if (!user) {
       throw new HttpException('invalid_credentials', HttpStatus.UNAUTHORIZED);
@@ -31,22 +54,6 @@ export class UsersService {
     return await this.prisma.user.update({
       where: { id },
       data: { password: await hash(payload.new_password, 10) },
-    });
-  }
-  //use by auth module to register user in database
-  async create(userDto: CreateUserDto): Promise<any> {
-    // // check if the user exists in the db
-    const userInDb = await this.prisma.user.findFirst({
-      where: { email: userDto.email },
-    });
-    if (userInDb) {
-      throw new HttpException('user_already_exist', HttpStatus.CONFLICT);
-    }
-    return await this.prisma.user.create({
-      data: {
-        ...userDto,
-        password: await hash(userDto.password, 10),
-      },
     });
   }
   //use by auth module to login user
@@ -75,5 +82,20 @@ export class UsersService {
     return await this.prisma.user.findFirst({
       where: { email },
     });
+  }
+
+  async findById(id: number): Promise<User> {
+    return await this.prisma.user
+      .findUnique({
+        where: {
+          id: id,
+        },
+      })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        return null;
+      });
   }
 }

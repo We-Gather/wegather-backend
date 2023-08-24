@@ -3,40 +3,41 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  Param,
   Put,
   Request,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 
 import { JwtAuthGuard } from '@app/core/auth/JwtAuthGuard';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @ApiTags('user')
 @Controller('user')
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @UseGuards(JwtAuthGuard)
   @ApiSecurity('access-key')
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get('me')
-  public async me(@Request() req) {
-    return req.user;
+  @Get(':id')
+  public async me(@Param('id') id) {
+    return this.userService.findById(id);
     // return new RenderUser(req.user);
   }
   @UseGuards(JwtAuthGuard)
   @ApiSecurity('access-key')
   @UseInterceptors(ClassSerializerInterceptor)
-  @Put('update/password')
+  @Put(':id/password')
   public async updatePassword(
-    @Request() req,
+    @Param('id') id,
     @Body()
     updatePasswordDto: UpdatePasswordDto,
   ) {
-    await this.usersService.updatePassword(updatePasswordDto, req.user.id);
+    await this.userService.updatePassword(updatePasswordDto, id);
     return {
       message: 'password_update_success',
     };

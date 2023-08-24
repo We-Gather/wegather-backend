@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -15,20 +15,20 @@ export class AuthService {
   constructor(
     private readonly prisma: DatabaseService,
     @Inject(JwtService) private readonly jwtService: JwtService,
-    private readonly usersService: UsersService,
+    private readonly userService: UserService,
   ) {}
 
   async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
     let status: RegistrationStatus = {
-      success: true,
+      statusCode: 201,
       message: 'ACCOUNT_CREATE_SUCCESS',
     };
 
     try {
-      status.data = await this.usersService.create(userDto);
+      status.data = await this.userService.create(userDto);
     } catch (err) {
       status = {
-        success: false,
+        statusCode: err.status,
         message: err.message,
       };
     }
@@ -37,11 +37,10 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto): Promise<any> {
     // find user in db
-    const user = await this.usersService.findByLogin(loginUserDto);
+    const user = await this.userService.findByLogin(loginUserDto);
 
     // generate and sign token
     const token = this._createToken(user);
-
     return {
       ...token,
       data: user,
@@ -55,7 +54,7 @@ export class AuthService {
   }
 
   async validateUser(payload: JwtPayload): Promise<any> {
-    const user = await this.usersService.findByPayload(payload);
+    const user = await this.userService.findByPayload(payload);
     if (!user) {
       throw new HttpException('INVALID_TOKEN', HttpStatus.UNAUTHORIZED);
     }
@@ -64,9 +63,9 @@ export class AuthService {
 }
 
 export interface RegistrationStatus {
-  success: boolean;
+  statusCode: number;
   message: string;
-  data?: User;
+  data?: number;
 }
 export interface RegistrationSeederStatus {
   success: boolean;

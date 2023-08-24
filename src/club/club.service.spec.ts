@@ -7,14 +7,14 @@ describe('ClubService', () => {
   let service: ClubService;
   let testRow: number;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [ClubService, DatabaseService],
     }).compile();
     service = module.get<ClubService>(ClubService);
   });
 
-  it('Success: create club', async () => {
+  it('[club.service] create() -> Success', async () => {
     const result: number = await service.create({
       name: '동아리1',
       type: 'SCHOOL',
@@ -24,12 +24,12 @@ describe('ClubService', () => {
     testRow = result;
   });
 
-  it('Success: find all club', async () => {
+  it('[club.service] findAll() -> Success', async () => {
     const result: Array<ClubEntity> = await service.findAll();
     expect(result).toBeInstanceOf(Array<ClubEntity>);
   });
 
-  it('Success: update a club', async () => {
+  it('[club.service] update() -> Success', async () => {
     const result: number = await service.update(testRow, {
       name: '동아리 아님',
       type: 'CENTRAL',
@@ -38,8 +38,8 @@ describe('ClubService', () => {
     expect(typeof result).toEqual('number');
   });
 
-  it('Fail: update a club which is not existing', async () => {
-    const result: number = await service.update(testRow + 3, {
+  it('[club.service] update() -> Fail: update a club which is not existing', async () => {
+    const result: number = await service.update(testRow + 1000, {
       name: '동아리 아님',
       type: 'CENTRAL',
       school_id: 3,

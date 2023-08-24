@@ -3,13 +3,16 @@ import { ClubController } from './club.controller';
 import { ClubService } from './club.service';
 import { DatabaseService } from '@app/core/database/DatabaseService';
 import { ClubEntity } from './entities/club.entity';
+import { ClubModule } from './club.module';
+import { CoreModule } from '@app/core/CoreModule';
 
 describe('ClubController', () => {
   let controller: ClubController;
   let testRow: number;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ClubModule, CoreModule],
       controllers: [ClubController],
       providers: [ClubService, DatabaseService],
     }).compile();
@@ -42,7 +45,7 @@ describe('ClubController', () => {
   });
 
   it('PUT /club/:id -> Fail', async () => {
-    const result: number = await controller.updateClub(testRow + 3, {
+    const result: number = await controller.updateClub(testRow + 1000, {
       name: '동아리 아님',
       type: 'CENTRAL',
       school_id: 3,

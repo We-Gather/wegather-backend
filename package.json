@@ -8,6 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prestart": "dotenv -e env/.env.local -- prisma migrate dev --name init",
     "prestart:dev": "dotenv -e env/.env.local -- prisma db push",
     "start": "dotenv -e env/.env.local -- nest start",
     "start:dev": "dotenv -e env/.env.local -- nest start --debug --watch",

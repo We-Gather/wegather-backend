@@ -4,13 +4,14 @@ import { LoginUserDto } from '@app/user/dto/login-user.dto';
 import {
   BadRequestException,
   Body,
+  ConflictException,
   Controller,
   Inject,
   Post,
 } from '@nestjs/common';
 
 @Controller()
-export class LoginController {
+export class AuthController {
   constructor(@Inject(AuthService) private readonly authService: AuthService) {}
 
   @Post('register')
@@ -20,8 +21,10 @@ export class LoginController {
     const result: RegistrationStatus = await this.authService.register(
       createUserDto,
     );
-    if (!result.success) {
+    if (result.statusCode == 400) {
       throw new BadRequestException(result.message);
+    } else if (result.statusCode == 409) {
+      throw new ConflictException(result.message);
     }
     return result;
   }
