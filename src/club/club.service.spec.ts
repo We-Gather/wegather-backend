@@ -2,10 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ClubService } from './club.service';
 import { DatabaseService } from '@app/core/database/DatabaseService';
 import { ClubEntity } from './entities/club.entity';
+import { HttpException } from '@nestjs/common';
 
 describe('ClubService', () => {
   let service: ClubService;
-  let testRow: number;
+  let testId: number;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,8 +22,21 @@ describe('ClubService', () => {
       school_id: 1,
     });
     expect(typeof result).toEqual('number');
-    testRow = result;
+    testId = result;
   });
+
+  // it('[club.service] create() -> Fail: no such school', async () => {
+  //   const result: HttpException = await service
+  //     .create({
+  //       name: '동아리1',
+  //       type: 'SCHOOL',
+  //       school_id: -1,
+  //     })
+  //     .catch((err) => {
+  //       return err;
+  //     });
+  //   expect(result.getStatus()).toEqual(400);
+  // });
 
   it('[club.service] findAll() -> Success', async () => {
     const result: Array<ClubEntity> = await service.findAll();
@@ -30,20 +44,24 @@ describe('ClubService', () => {
   });
 
   it('[club.service] update() -> Success', async () => {
-    const result: number = await service.update(testRow, {
+    const result: number = await service.update(testId, {
       name: '동아리 아님',
       type: 'CENTRAL',
       school_id: 3,
     });
-    expect(typeof result).toEqual('number');
+    expect(result).toEqual(testId);
   });
 
   it('[club.service] update() -> Fail: update a club which is not existing', async () => {
-    const result: number = await service.update(testRow + 1000, {
-      name: '동아리 아님',
-      type: 'CENTRAL',
-      school_id: 3,
-    });
-    expect(result).toBe(-1);
+    const result: HttpException = await service
+      .update(testId + 1000, {
+        name: '동아리 아님',
+        type: 'CENTRAL',
+        school_id: 3,
+      })
+      .catch((err) => {
+        return err;
+      });
+    expect(result.getStatus()).toBe(404);
   });
 });

@@ -1,12 +1,15 @@
-// src/users/entities/user.entity.ts
+// src/users/entities/user.entity.ts=
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@prisma/client';
-import { Exclude } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
+import { IsInt } from 'class-validator';
 
 export class UserEntity implements User {
   constructor(partial: Partial<UserEntity>) {
     Object.assign(this, partial);
   }
+  @IsInt()
+  // @Type(() => ParseIntPipe)
   @ApiProperty()
   id: number;
 
@@ -22,6 +25,7 @@ export class UserEntity implements User {
   @ApiProperty()
   email: string;
 
+  @Exclude()
   @ApiProperty()
   password: string;
 
@@ -42,4 +46,6 @@ export class UserEntity implements User {
 
   @ApiProperty()
   deletedAt: Date;
+
+  token?: string;
 }

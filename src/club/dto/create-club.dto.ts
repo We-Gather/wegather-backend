@@ -4,7 +4,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ClubType } from '@prisma/client';
 import {
   IsEnum,
-  IsIn,
   IsNotEmpty,
   IsNumber,
   IsOptional,

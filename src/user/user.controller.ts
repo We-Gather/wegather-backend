@@ -1,19 +1,19 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Get,
+  NotFoundException,
   Param,
+  ParseIntPipe,
   Put,
-  Request,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { UserService } from './user.service';
 
 import { JwtAuthGuard } from '@app/core/auth/JwtAuthGuard';
 import { UpdatePasswordDto } from './dto/update-password.dto';
+import { UserEntity } from './entities/user.entity';
 
 @ApiTags('user')
 @Controller('user')
@@ -22,24 +22,21 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiSecurity('access-key')
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
-  public async me(@Param('id') id) {
-    return this.userService.findById(id);
-    // return new RenderUser(req.user);
+  public async me(@Param('id', ParseIntPipe) id: number) {
+    const user: UserEntity = await this.userService.findByPayload({ id: id });
+    if (!user) throw new NotFoundException('no such user');
+    return user;
   }
+
   @UseGuards(JwtAuthGuard)
   @ApiSecurity('access-key')
-  @UseInterceptors(ClassSerializerInterceptor)
   @Put(':id/password')
   public async updatePassword(
-    @Param('id') id,
+    @Param('id', ParseIntPipe) id: number,
     @Body()
     updatePasswordDto: UpdatePasswordDto,
   ) {
-    await this.userService.updatePassword(updatePasswordDto, id);
-    return {
-      message: 'password_update_success',
-    };
+    return await this.userService.updatePassword(updatePasswordDto, id);
   }
 }

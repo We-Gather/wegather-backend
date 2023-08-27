@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateClubDto } from './dto/create-club.dto';
 import { DatabaseService } from '@app/core/database/DatabaseService';
 import { ClubEntity } from './entities/club.entity';
-import { validateOrReject } from 'class-validator';
 import { UpdateClubDto } from './dto/update-club.dto';
 
 @Injectable()
@@ -10,7 +13,7 @@ export class ClubService {
   constructor(private prisma: DatabaseService) {}
 
   async create(clubDto: CreateClubDto): Promise<number> {
-    return await this.prisma.club
+    const club = await this.prisma.club
       .create({
         data: {
           ...clubDto,
@@ -18,10 +21,10 @@ export class ClubService {
       })
       .then((res) => {
         return res.id;
-      })
-      .catch((err) => {
-        return -1;
       });
+    if (!club)
+      throw new BadRequestException('creation of club has been failed');
+    return club;
   }
 
   async findAll(): Promise<Array<ClubEntity>> {
@@ -31,7 +34,7 @@ export class ClubService {
         return res;
       })
       .catch((err) => {
-        return [];
+        throw new BadRequestException('bad request');
       });
   }
 
@@ -47,8 +50,7 @@ export class ClubService {
         return res.id;
       })
       .catch((err) => {
-        // 존재하지 않는 Record를 Update 시도한 경우
-        return -1;
+        throw new NotFoundException('no such user');
       });
   }
 }

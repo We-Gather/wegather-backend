@@ -5,10 +5,11 @@ import { DatabaseService } from '@app/core/database/DatabaseService';
 import { ClubEntity } from './entities/club.entity';
 import { ClubModule } from './club.module';
 import { CoreModule } from '@app/core/CoreModule';
+import { HttpException } from '@nestjs/common';
 
 describe('ClubController', () => {
   let controller: ClubController;
-  let testRow: number;
+  let testId: number;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,7 +28,7 @@ describe('ClubController', () => {
       school_id: 1,
     });
     expect(typeof result).toEqual('number');
-    testRow = result;
+    testId = result;
   });
 
   it('GET /club/all -> Success', async () => {
@@ -36,20 +37,24 @@ describe('ClubController', () => {
   });
 
   it('PUT /club/:id -> Success', async () => {
-    const result: number = await controller.updateClub(testRow, {
+    const result: number = await controller.updateClub(testId, {
       name: '동아리 아님',
       type: 'CENTRAL',
       school_id: 3,
     });
-    expect(typeof result).toEqual('number');
+    expect(result).toEqual(testId);
   });
 
   it('PUT /club/:id -> Fail', async () => {
-    const result: number = await controller.updateClub(testRow + 1000, {
-      name: '동아리 아님',
-      type: 'CENTRAL',
-      school_id: 3,
-    });
-    expect(result).toBe(-1);
+    const result: HttpException = await controller
+      .updateClub(testId + 1000, {
+        name: '동아리 아님',
+        type: 'CENTRAL',
+        school_id: 3,
+      })
+      .catch((err) => {
+        return err;
+      });
+    expect(result.getStatus()).toEqual(404);
   });
 });
