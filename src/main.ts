@@ -26,6 +26,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   await app.get(LifeCycleService).startService();
+  await app.enableCors();
   await app.listen(3000);
 }
 bootstrap();
