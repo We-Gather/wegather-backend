@@ -69,3 +69,23 @@ model OutBoxMessage {
   data      String    @db.MediumText()
   createdAt DateTime  @default(now())
 }
+
+model Club {
+  id            Int         @id @default(autoincrement())
+  name          String
+  type          ClubType    @default(SCHOOL)
+  school_id     Int
+  introduction  String?
+  description   String?
+  // category      String
+  // tag           String
+  poster        String?
+  createdAt     DateTime    @default(now())
+}
+
+enum ClubType {
+  UNION
+  CENTRAL
+  SCHOOL
+  ACADEMY
+}
