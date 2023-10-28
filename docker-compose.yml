@@ -3,18 +3,40 @@ version: '3.1'
 
 services:
   db:
-    image: mysql
-    # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
-    # (this is just an example, not intended to be a production configuration)
-    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    image: mysql:8.0
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: test
     ports:
       - 13306:3306
+    volumes:
+      - ./.mysql:/docker-entrypoint-initdb.d
+    command:
+      [
+        mysqld,
+        --character-set-server=utf8mb4,
+        --collation-server=utf8mb4_unicode_ci,
+      ]
 
-  adminer:
-    image: adminer
-    restart: always
+  service:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    environment:
+      - DATABASE_URL=mysql://root:test@db:3306/WegatherBackendService
+    command:
+      [
+        'dockerize',
+        '-wait',
+        'tcp://db:3306',
+        '-timeout',
+        '2m',
+        'yarn',
+        'start:dev',
+      ]
     ports:
-      - 8080:8080
+      - '4000:3000'
+    volumes:
+      - .:/app
+    depends_on:
+      - db

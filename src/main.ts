@@ -3,6 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { LifeCycleService } from '@app/core/lifeCycle/LifeCycleService';
+import '@app/env';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

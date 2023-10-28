@@ -3,7 +3,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { compare, hash } from 'bcrypt';
+import { compare, hash } from 'bcryptjs';
 import { User } from '@prisma/client';
 import { DatabaseService } from '@app/core/database/DatabaseService';
 
