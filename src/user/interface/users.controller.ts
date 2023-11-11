@@ -9,10 +9,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { UsersService } from './users.service';
+import { UsersService } from '../users.service';
 
 import { JwtAuthGuard } from '@app/core/auth/JwtAuthGuard';
-import { UpdatePasswordDto } from './dto/update-password.dto';
+import { UpdatePasswordDto } from '../dto/update-password.dto';
 
 @ApiTags('user')
 @Controller('user')

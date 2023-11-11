@@ -6,7 +6,6 @@ import { LoginUserDto } from './dto/login-user.dto';
 
 import { JwtPayload } from '@app/core/auth/JwtStrategy';
 import { User } from '@prisma/client';
-import { hash } from 'bcryptjs';
 import { DatabaseService } from '@app/core/database/DatabaseService';
 // import {User} from "../users/user.entity";
 
