@@ -1,6 +1,6 @@
 import { AuthService, RegistrationStatus } from '@app/user/auth.service';
-import { CreateUserDto } from '@app/user/dto/create-user.dto';
-import { LoginUserDto } from '@app/user/dto/login-user.dto';
+import { CreateUserDto } from '@app/user/interface/dto/create-user.dto';
+import { LoginUserDto } from '@app/user/interface/dto/login-user.dto';
 import {
   BadRequestException,
   Body,
